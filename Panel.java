@@ -1,118 +1,75 @@
-/**
-  *	creates a JPanel that
-  */
 import javax.swing.*;
 import java.awt.event.*;
 import java.awt.*;
-import java.util.Scanner;
-import java.util.LinkedList;
-import java.util.ListIterator;
-import java.util.HashMap;
 import java.awt.geom.GeneralPath;
 
 public class Panel extends JPanel implements MouseListener, MouseMotionListener{
 
 	Graphics2D g2; 
-        GeneralPath path;
-	LinkedList<Patch> patches;
-	LinkedList<Point> points;
-	ListIterator<Patch> it;
-	ListIterator<Point> it2; 
-
-	int x;
-	int y;
-
-	Patch pa;
-	
+	GeneralPath path;
+	Color color = Color.BLACK;
+	Polygon p;
 
 	public Panel(){
-
-		addMouseListener(this);
-		addMouseMotionListener(this);
+	        addMouseListener(this);
+	        addMouseMotionListener(this);
 	}
 
-//	@Override
+	@Override
 	public void paintComponent(Graphics g){
 	        g2 = (Graphics2D) g;
 		super.paintComponent(g2);
-
-		Scanner sc = new Scanner(System.in);
-
-        	path = new GeneralPath(GeneralPath.WIND_NON_ZERO);
-
-		patches = new LinkedList<Patch>();
-		points = new LinkedList<Point>();
-		ListIterator<Patch> it;
-		ListIterator<Point> it2; 
-
-		String name = "";
-		String token = "";
-
-		while(sc.hasNext()){
-			token = sc.next();
-			if(token.equals("patch-of")){
-				name = sc.next();
-				if(!sc.hasNextInt()){
-					name +=" " + sc.next();
-				}
-				if(!sc.hasNextInt()){
-					name +=" " + sc.next();
-				}
-				if(!sc.hasNextInt()){
-					name +=" " + sc.next();
-				}
-				pa = new Patch(name);
-				patches.add(pa);
-				//read coordinates
-				while(sc.hasNextInt()){
-					x = sc.nextInt();
-					y = sc.nextInt();
-					Point p = new Point(x,y);
-					pa.addPoint(p);
-				}
-			}
-		}
-	        g2.setPaint(Color.BLACK);
-	        g2.setStroke(new BasicStroke(0.1f));
 		path = new GeneralPath(GeneralPath.WIND_NON_ZERO);
-		it = patches.listIterator(0);
-		while(it.hasNext()){
-			pa = it.next();
-			Point p1;
-			Point p2;
-			points.addAll(pa.getCoordinates());
-			p1 = points.getFirst();
-			path.moveTo(p1.getX(), p1.getY());
-			points.removeFirst();
-			while(!points.isEmpty()){
-				p2 = points.getFirst(); 
-				points.removeFirst();
-				path.lineTo(p2.getX(), p2.getY());
-			}
-			path.lineTo(p1.getX(), p1.getY());
-		}
+
+// 		first try: change the color of rectangle by clicking
+		g2.setPaint(color);
+	        g2.setStroke(new BasicStroke(0.1f));
+		path.moveTo(50,50);
+		path.lineTo(100,50);
+		path.lineTo(100,100);
+		path.lineTo(50,100);
+		path.lineTo(50,50);
 		g2.draw(path);
-//		g2.fill(path);
+
+//		second try: 
+		path = new GeneralPath(GeneralPath.WIND_NON_ZERO);
+		int[] listX = {150, 200, 200, 250, 250, 200, 200, 150, 150, 100, 100, 150, 150};
+		int[] listY = {100, 100, 150, 150, 200, 200, 250, 250, 200, 200, 150, 150, 100};
+		p = new Polygon(listX, listY, 13);
+		g2.setPaint(color);
+		g2.setStroke(new BasicStroke(1.0f));
+		path.moveTo(listX[0], listY[0]);
+		for(int i = 1; i < listX.length; i++){
+			path.lineTo(listX[i], listY[i]);
+		}
+		g2.fill(path);
 	}
 
-	public void mousePressed(MouseEvent me){
-	}
+    	public void mousePressed(MouseEvent me) {
+		System.out.println("press " + me.getPoint());
+    	}
 
-	public void mouseExited(MouseEvent me){
-	}
-	
-	public void mouseEntered(MouseEvent me){
-	}
+  	public void mouseExited(MouseEvent me) {
+		System.out.println("exit " + me.getPoint());
+   	}
 
-	public void mouseReleased(MouseEvent me){
-	}
+   	public void mouseEntered(MouseEvent me) {
+		System.out.println("enter " + me.getPoint());
+   	}
 
-	public void mouseClicked(MouseEvent me){
-	}
+   	public void mouseReleased(MouseEvent me) {
+		System.out.println("up at " + me.getPoint());
+    	}
 
-	public void mouseMoved(MouseEvent me){
-	}
-	
-	public void mouseDragged(MouseEvent me){
-	}
+    	public void mouseClicked(MouseEvent me) {
+        	System.out.println("click at " + me.getPoint());
+    	}
+
+    	public void mouseMoved(MouseEvent me) {
+        	System.out.println("moved to " + me.getPoint());
+    	}
+
+    	public void mouseDragged(MouseEvent me) {
+        	System.out.println("dragged to " + me.getPoint());
+    	}
 }

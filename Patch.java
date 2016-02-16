@@ -1,43 +1,42 @@
 /**
-  *	country class for WorldMap
-  *	coordinates saved in a LinkedList<Points>
+  *	Eine Landfläche ist ein zusammenhängender Bereich auf der Spielfläche und wird 
+  *	beschrieben durch eine Folge von Koordinaten, die die Eckpunkte der Landfläche 
+  *	angeben.
   */
-
+import java.awt.Color;
+import java.awt.Shape;
+import java.awt.Point;
+import java.awt.Polygon;
 import java.util.LinkedList;
 
-public class Patch{
+public class Patch extends Polygon implements Shape{
 
 	final String name;
-	private int x;
-	private int y;
-	private String color = "Black";
-	LinkedList<Point> pointList = new LinkedList<Point>();
+	private Color color;
+	LinkedList<Point> points = new LinkedList<Point>();
 
 	public Patch(String name){
 		this.name = name;
-	}
-
-	public void addPoint(Point p){
-		pointList.add(p);
-	}
-
-	public LinkedList<Point> getCoordinates(){
-		return pointList;
-	}
-	
-	public void setX(int x){
-		this.x = x;
-	}
-
-	public void setY(int y){
-		this.y = y;
+		this.color = Color.BLACK;
 	}
 
 	public String getName(){
 		return this.name;
 	}
 
-	public void setColor(String color){
-		this.color = color;
+	public void setColor(Color c){
+		this.color = c;
+	}
+
+	public Color getColor(){
+		return this.color;
+	}
+	
+	public void myAddPoint(Point p){
+		this.points.add(p);
+	}
+
+	public LinkedList<Point> myGetPoints(){
+		return points;
 	}
 }
