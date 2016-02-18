@@ -358,13 +358,15 @@ class PolygonPanel extends JPanel{
 class PolygonSelector extends MouseAdapter{
 
     PolygonPanel polygonPanel;
+
+    Color nextColor = Color.BLUE;
   
     public PolygonSelector(PolygonPanel pp){
         polygonPanel = pp;
     }
   
     public void mousePressed(MouseEvent e){
-
+	
         Point p = e.getPoint();
 	Patch patch;
 	String polyName = "";
@@ -376,10 +378,16 @@ class PolygonSelector extends MouseAdapter{
 			polyName = patch.name;
 			i = polygonPanel.polygons.indexOf(patch);	// get the index of patch in list of polygons
 			patch = polygonPanel.polygons.get(i);		// get the patch
-			if(isPatchFree(Color.BLUE, patch)){
-				patch.setColor(Color.BLUE);			// set the color
+			if(isPatchFree(nextColor, patch)){
+				if(nextColor == Color.RED){
+					nextColor = Color.BLUE;
+				}else if(nextColor == Color.BLUE){
+					nextColor = Color.RED;
+				}
+				patch.setColor(nextColor);			// set the color
 				polygonPanel.polygons.set(i, patch);		// set the patch back into the list
 			}
+
 			polygonPanel.repaint();				// repaint the picture/panel
 		}
 	}
@@ -388,23 +396,30 @@ class PolygonSelector extends MouseAdapter{
 	while(it.hasNext()){
 		patch = it.next();
 		if(patch.getName().equals(polyName)){	
-			i = polygonPanel.polygons.indexOf(patch);
-			patch = polygonPanel.polygons.get(i);
-			patch.setColor(Color.BLUE);
-			polygonPanel.polygons.set(i, patch);
+			if(isPatchFree(nextColor, patch)){
+				i = polygonPanel.polygons.indexOf(patch);
+				patch = polygonPanel.polygons.get(i);
+				patch.setColor(nextColor);
+				polygonPanel.polygons.set(i, patch);
+			}
 		}
 		polygonPanel.repaint();				
 	}
     }
 
+/**
+  *	is the patch already occupied by opponent
+  */
     public boolean isPatchFree(Color c, Patch pa){
+
 	boolean free = false;
 	Patch patch = pa;;
-	if(patch.getColor() == Color.BLACK /*|| patch.getColor() == c*/){
+	if(patch.getColor() == Color.BLACK){
 		System.out.println("FreePatch");
 		free = true;
 	}else{
 		System.out.println("Patch not free");
+		free = false;
 	}
 	return free;
     }
